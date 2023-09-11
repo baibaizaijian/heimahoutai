@@ -5,7 +5,7 @@
     <img src="http://123.57.109.30:4005/vue_shop/img/heima.b5a855ee.png" >
     <h1>电商后台管理系统</h1>
     </div>
-  <el-button type="info" @>退出</el-button>
+  <el-button type="info" @click="quit">退出</el-button>
   </el-header>
   <el-container>
     <el-aside  :width="isCollapse ? '64px' : '200px'">
@@ -31,12 +31,12 @@
     </el-menu>
     </el-aside>
     <el-main>
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
    <el-breadcrumb-item v-for="item in arr" :key="item">{{item}}</el-breadcrumb-item>
 </el-breadcrumb>
       <router-view></router-view>
-    </el-main>
+</el-main>
   </el-container>
 </el-container>
 </template>
@@ -66,6 +66,15 @@ export default {
     },
     fn (arr) {
       this.arr = arr
+    },
+    quit () {
+      // console.log('用户点击了确认')
+      // 1. 提交 mutations 来清除 token
+      this.$store.commit('user/logout')
+      // 2. 跳转到登录页
+      this.$router.push('/login')
+      // 3. 提醒用户退出成功
+      this.$message.success('退出成功')
     }
 
   },

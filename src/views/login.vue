@@ -7,9 +7,10 @@
       </div>
     <el-card class="login-card">
 
-      <el-form>
+      <el-form ref="form" :model="form" >
         <el-form-item class="name">
-          <el-input v-model="form.name" placeholder="请输入账号">
+          <el-input v-model="form.username" placeholder="请输入账号"
+          >
             <i
               class="el-icon-user el-input__icon"
               slot="prefix"
@@ -18,18 +19,13 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="form.name" placeholder="请输入密码">
-            <i
-              class="el-icon-loading el-input__icon"
-              slot="prefix"
-
-            >
-            </i>
+          <el-input v-model="form.password"  placeholder="请输入密码" show-password  >
+            <i class="el-icon-loading el-input__icon" slot="prefix"> </i>
           </el-input>
         </el-form-item>
         <el-form-item class="btn">
-          <el-button type="primary">登录</el-button>
-          <el-button type="info">重置</el-button>
+          <el-button type="primary" @click='login'>登录</el-button>
+          <el-button type="info" @click='reset'>重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -38,14 +34,29 @@
 </template>
 
 <script>
+
 export default {
   name: 'LoginIndex',
   data () {
     return {
       form: {
-        name: ''
+        username: '',
+        password: ''
       }
+
     }
+  },
+  methods: {
+    async login () {
+      console.log(this.form)
+      await this.$store.dispatch('user/loginAction', this.form)
+      this.$router.push('/')
+      this.$message.success('登录成功')
+    },
+    reset () {
+      this.$refs.form.resetFields()
+    }
+
   }
 }
 </script>

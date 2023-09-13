@@ -4,9 +4,10 @@
       <el-table-column prop="" label="" width="50"> </el-table-column>
       <el-table-column prop="authName" label="权限名称"> </el-table-column>
       <el-table-column prop="path" label="路径"> </el-table-column>
-      <el-table-column prop="address" label="权限等级">
+      <el-table-column prop="address" label="权限等级" >
         <template #default="obj">
           <el-tag :type="level[obj.row.level]">{{levelText[obj.row.level]}}</el-tag>
+        <!-- {{color[obj.row.level]}} -->
         </template>
       </el-table-column>
     </el-table>
@@ -21,7 +22,8 @@ export default {
     return {
       rightsList: [],
       level: ['', 'success', 'warning'],
-      levelText: ['标签一', '标签二', '标签三']
+      levelText: ['标签一', '标签二', '标签三'],
+      color: ['<el-tag>一级</el-tag>', "<el-tag type='success'二级</el-tag>", "<el-tag type='warning'>三级</el-tag>"]
     }
   },
   async created () {

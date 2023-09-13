@@ -50,7 +50,7 @@ export default {
         }
       },
       legend: {
-        data: ['华东', '华南', '华北', '西部', '其他']
+        data: this.list.map(ele => ele.name)
       },
       toolbox: {
         feature: {
@@ -77,7 +77,7 @@ export default {
       ],
       series: [
         {
-          name: '华东',
+          name: this.list[0].name,
           type: 'line',
           stack: 'Total',
           areaStyle: { color: '#c23531' },
@@ -87,7 +87,7 @@ export default {
           data: this.list[0].data
         },
         {
-          name: '华南',
+          name: this.list[1].name,
           type: 'line',
           stack: 'Total',
           areaStyle: { color: '#6e7d88' },
@@ -97,7 +97,7 @@ export default {
           data: this.list[1].data
         },
         {
-          name: '华北',
+          name: this.list[2].name,
           type: 'line',
           stack: 'Total',
           areaStyle: { color: '#91bdc3' },
@@ -107,7 +107,7 @@ export default {
           data: this.list[2].data
         },
         {
-          name: '西部',
+          name: this.list[3].name,
           type: 'line',
           stack: 'Total',
           areaStyle: { color: '#e1a894' },
@@ -117,7 +117,7 @@ export default {
           data: this.list[3].data
         },
         {
-          name: '其他',
+          name: this.list[4].name,
           type: 'line',
           stack: 'Total',
           label: {

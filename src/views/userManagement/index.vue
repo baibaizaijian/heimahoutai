@@ -4,9 +4,7 @@
       <el-input placeholder="请输入内容" class="input-with-select">
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
-      <el-button type="primary" @click="dialogFormVisible = true"
-        >添加用户</el-button
-      >
+      <el-button type="primary" @click="dialogFormVisible = true">添加用户</el-button>
       <!-- 添加用户弹出框 -->
       <el-dialog title="添加用户" :visible.sync="dialogFormVisible">
         <el-form :model="form" :rules="rules" ref="addForm">
@@ -150,7 +148,6 @@
       </el-table-column>
     </el-table>
     <div class="block">
-      <span class="demonstration">完整功能</span>
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"

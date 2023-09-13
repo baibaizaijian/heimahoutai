@@ -90,7 +90,7 @@ export default {
   async created () {
     const res = await getNav()
     this.list = res.data
-    console.log(res)
+    // console.log(res)
   }
 }
 </script>
@@ -120,9 +120,7 @@ export default {
   height: 100%;
   background-color: #333744;
 }
-.main{
-  // width: 1270px;
-}
+
 .el-breadcrumb {
   margin-bottom: 10px;
 }

@@ -11,6 +11,7 @@
       <el-aside :width="isCollapse ? '64px' : '200px'">
         <el-menu
           router
+          unique-opened
           default-active="2"
           class="el-menu-vertical-demo"
           background-color="#333744"
@@ -27,7 +28,7 @@
               <span>{{ item.authName }}</span>
             </template>
             <el-menu-item
-              :index="ele.path"
+              :index="'/'+ele.path"
               v-for="(ele, i) in item.children"
               :key="i"
               @click="fn([item.authName, ele.authName])"

@@ -17,6 +17,7 @@ const routes = [
       { path: '/rights', component: () => import('@/views/Permission/privilege') },
       { path: '/roles', component: () => import('@/views/Permission/role') },
       { path: '/goods', component: () => import('@/views/goods/goods') },
+      { path: '/goods/add', component: () => import('@/views/goods/addGoods') },
       { path: '/params', component: () => import('@/views/goods/goodsCategory') },
       { path: '/categories', component: () => import('@/views/goods/parameter') },
       { path: '/orders', component: () => import('@/views/indent/indent') },

@@ -8,7 +8,7 @@
           <!-- 一级 -->
           <el-row v-for="one in row.children" :key="one.id">
             <el-col :span="4">
-              <el-tag closable>
+              <el-tag closable  @close="delRights(row.id,one.id)">
                 {{ one.authName }}
               </el-tag>
               <i class="el-icon-caret-right"></i>
@@ -17,14 +17,14 @@
               <!-- 二级 -->
               <el-row v-for="two in one.children" :key="two.id">
                 <el-col :span="5">
-                  <el-tag type="success" closable>
+                  <el-tag type="success" closable  @close="delRights(row.id,two.id)">
                     {{ two.authName }}
                   </el-tag>
                   <i class="el-icon-caret-right"></i>
                 </el-col>
                 <el-col :span="19">
                   <el-tag
-                    @close="$message.success('你好')"
+                    @close="delRights(row.id,three.id)"
                     v-for="three in two.children"
                     :key="three.id"
                     type="warning"
@@ -64,7 +64,7 @@
             size="mini"
             type="warning"
             icon="el-icon-setting"
-            @click="setRight(obj.row)"
+            @click="setRight(obj.row,rowId)"
             >分配权限</el-button
           >
         </template>
@@ -74,6 +74,7 @@
     <el-dialog title="分配权限" :visible.sync="setRightVisible" width="50%" @close="close">
       <!-- 树形控件 -->
       <el-tree
+        ref="tree"
         :data="rightsList"
         show-checkbox
         node-key="id"
@@ -116,17 +117,21 @@
 <script>
 import { getRole } from '@/api/user'
 import {
+  RolesRights,
   getRolesTree,
   addRole,
   getRoleID,
   putRole,
-  delRole
+  delRole,
+  delRoleRights
 } from '@/api/role'
+
 export default {
   name: 'roleList',
 
   data () {
     return {
+      rowId: '',
       // 默认选中的
       defKeys: [],
       defaultProps: {
@@ -166,14 +171,33 @@ export default {
     },
     /* 权限分配 */
     setRight (obj) {
+      this.rowId = obj.id
       this.setRightVisible = true
       console.log('当前角色', obj)
       // 获取默认值
 
       this.getRightsKeys(obj, this.defKeys)
-      console.log('现在默认keys', this.defKeys)
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys(this.defKeys)
+      })
     },
-    allotRights () {},
+    // 提交权限
+    async allotRights () {
+      const keys = [
+        // 半选择的项
+        ...this.$refs.tree.getCheckedKeys(),
+        // 全选择的项
+        ...this.$refs.tree.getHalfCheckedKeys()
+      ]
+      console.log(keys)
+      const data = keys.join(',')
+      console.log(data)
+      const res = await RolesRights(this.rowId, { rids: data })
+      console.log(res)
+      this.$message.success(res.meta.msg)
+      this.setRightVisible = false
+      this.getData()
+    },
 
     /* 确认提交函数 */
     async submit () {
@@ -237,6 +261,10 @@ export default {
       this.defKeys = []
 
       console.log(this.defKeys)
+    },
+    delRights (roleId, perId) {
+      const res = delRoleRights(roleId, perId)
+      console.log(res)
     }
   }
 }

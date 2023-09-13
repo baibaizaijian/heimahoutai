@@ -4,7 +4,7 @@
       <el-input placeholder="请输入内容" class="input-with-select">
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
-      <el-button type="primary" @click="dialogFormVisible = true"
+      <el-button type="primary" @click="$router.push('/goods/add')"
         >添加用户</el-button
       >
     </div>

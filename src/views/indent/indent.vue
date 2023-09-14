@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card class="box">
     <el-input placeholder="请输入内容" class="input-with-select">
       <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
@@ -117,4 +117,5 @@ export default {
 .el-table {
   margin-bottom: 20px;
 }
+
 </style>

@@ -9,7 +9,7 @@ export const getGoodsList = params => request.get('/categories', { params })
 export const getCategories = (params, id) => request.get(`/categories/${id}/attributes`, { params })
 
 // 添加-商品
-export const addGoods = data => request.post('/goods', { data })
+export const addGoods = data => request.post('/goods', data)
 
 // 商品-删除
 export const delGoods = (data, id) => request.delete(`/goods/${id}`, { data })

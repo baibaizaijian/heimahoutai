@@ -35,25 +35,26 @@
               <el-tag
                 v-for="(item, i) in obj.row.attr_vals"
                 :key="i"
-                closable=""
+                closable
+                 @close="closetag(i,obj.row)"
               >
                 {{ item }}</el-tag
               >
               <el-input
                 class="input-new-tag"
-                v-if="inputVisible"
-                v-model="inputValue"
+                v-if="obj.row.inputVisible"
+                v-model="obj.row.inputValue"
                 ref="saveTagInput"
                 size="small"
-                @keyup.enter.native="handleInputConfirm"
-                @blur="handleInputConfirm"
+                @keyup.enter.native="handleInputConfirm(obj.row)"
+                @blur="handleInputConfirm(obj.row)"
               >
               </el-input>
               <el-button
                 v-else
                 class="button-new-tag"
                 size="small"
-                @click="showInput"
+                @click="showInput(obj.row)"
                 >+ New Tag</el-button
               >
             </template>
@@ -106,25 +107,26 @@
               <el-tag
                 v-for="(item, i) in obj.row.attr_vals"
                 :key="i"
-                closable=""
+                closable
+               @close="closetag(i,obj.row)"
               >
                 {{ item }}</el-tag
               >
               <el-input
                 class="input-new-tag"
-                v-if="inputVisible"
-                v-model="inputValue"
+                v-if="obj.row.inputVisible"
+                v-model="obj.row.inputValue"
                 ref="saveTagInput"
                 size="small"
-                @keyup.enter.native="handleInputConfirm"
-                @blur="handleInputConfirm"
+                @keyup.enter.native="handleInputConfirm(obj.row)"
+                @blur="handleInputConfirm(obj.row)"
               >
               </el-input>
               <el-button
                 v-else
                 class="button-new-tag"
                 size="small"
-                @click="showInput"
+                @click="showInput(obj.row)"
                 >+ New Tag</el-button
               >
             </template>
@@ -218,10 +220,10 @@ export default {
         attr_name: [
           { required: true, message: '请输入分类名称', trigger: 'blur' }
         ]
-      },
+      }
       // 添加标签
-      inputVisible: false,
-      inputValue: ''
+      // inputVisible: false,
+      // inputValue: ''
     }
   },
   async created () {
@@ -243,9 +245,11 @@ export default {
       const res = await getAttributes(this.cateID, { sel: this.activeTabs })
       res.data.forEach((item) => {
         item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
+        item.inputValue = ''
+        item.inputVisible = false
       })
       this.tableData = res.data
-      console.log('参数', res)
+      console.log('参数', res.data)
     },
     async submit () {
       this.$refs.Form.validate(async (valid) => {
@@ -307,9 +311,36 @@ export default {
       this.Id = null
     },
     // 标签事件
-    handleInputConfirm () {},
-    showInput () {
-      this.inputVisible = true
+    async handleInputConfirm (row) {
+      if (row.inputValue.trim().length === 0) {
+        row.inputValue = ''
+        row.inputVisible = false
+      } else {
+        row.attr_vals.push(row.inputValue.trim())
+        const res = await putAttributes(this.cateID, row.attr_id, {
+          attr_name: row.attr_name,
+          attr_sel: row.attr_sel,
+          attr_vals: row.attr_vals.join(' ')
+        })
+        this.$message.success(res.meta.msg)
+        row.inputValue = ''
+        row.inputVisible = false
+      }
+    },
+    showInput (row) {
+      row.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    async  closetag (i, row) {
+      row.attr_vals.splice(i, 1)
+      const res = await putAttributes(this.cateID, row.attr_id, {
+        attr_name: row.attr_name,
+        attr_sel: row.attr_sel,
+        attr_vals: row.attr_vals.join(' ')
+      })
+      this.$message.success(res.meta.msg)
     }
 
   },

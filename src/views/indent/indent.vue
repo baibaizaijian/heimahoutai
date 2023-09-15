@@ -13,12 +13,17 @@
       <el-table-column prop="update_time" label="下单时间"> </el-table-column>
       <el-table-column prop="address" label="操作">
         <template #default="{ row }">
-          <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            size="mini"
+            @click="locationVisible = true"
+          ></el-button>
           <el-button
             type="success"
             icon="el-icon-location"
             size="mini"
-            @click="express(row.id)"
+            @click="express(row.user_id)"
           ></el-button>
         </template>
       </el-table-column>
@@ -36,26 +41,48 @@
       </el-pagination>
     </div>
     <!-- 物流弹框 -->
-    <el-dialog
-      title="物流进度"
-      :visible.sync="dialogVisible"
-      width="50%"
+    <el-dialog title="物流进度" :visible.sync="dialogVisible" width="50%">
+      <el-timeline :reverse="reverse">
+        <el-timeline-item
+          v-for="(activity, index) in activities"
+          :key="index"
+          :timestamp="activity.timestamp"
+        >
+          {{ activity.content }}
+        </el-timeline-item>
+      </el-timeline>
+    </el-dialog>
+    <!-- 地址弹框 -->
+    <el-dialog title="收货地址" :visible.sync="locationVisible">
+      <el-form :model="form" :rules="rules" ref="Form">
+        <el-form-item label="省市区/县" label-width="100px" prop="location">
+          <div class="block">
+            <el-cascader
+              v-model="valueKey"
+              :options="citydata"
+               clearable
+              :props="{ props: 'hover' }"
+              @change="handleChange"
+            ></el-cascader>
+          </div>
+        </el-form-item>
 
-    >
-    <el-timeline :reverse="reverse">
-    <el-timeline-item
-      v-for="(activity, index) in activities"
-      :key="index"
-      :timestamp="activity.timestamp">
-      {{activity.content}}
-    </el-timeline-item>
-  </el-timeline>
-
+        <el-form-item label="详细地址" label-width="100px" prop="location">
+          <el-input v-model="form.location" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="locationVisible = false">取 消</el-button>
+        <el-button type="primary" @click="locationVisible = false"
+          >确 定</el-button
+        >
+      </div>
     </el-dialog>
   </el-card>
 </template>
 
 <script>
+import citydata from '@/utils/citydata'
 import { orders, logistics } from '@/api/orders'
 export default {
   name: 'indentList',
@@ -67,13 +94,32 @@ export default {
         pagenum: 1,
         pagesize: 5
       },
+      citydata: citydata,
       list: [],
       dialogVisible: false,
+      locationVisible: false,
+      form: {
+        location: ''
+      },
+      rules: {
+        location: [
+          { required: true, message: '请输入详细地址', trigger: 'blur' }
+        ]
+      },
       reverse: false,
-      activities: [{
-        content: '活动按期开始',
-        timestamp: '2018-04-15'
-      }]
+      activities: [
+        {
+          content: '活动按期开始',
+          timestamp: '2018-04-15'
+        }
+      ],
+      // 级连选择器
+      props: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
+      },
+      valueKey: []
     }
   },
   created () {
@@ -96,15 +142,18 @@ export default {
     },
     /* 物流 */
     async express (id) {
+      console.log(id)
       this.dialogVisible = true
       const res = await logistics(id)
       console.log(res.data)
-      this.activities = res.data.map(item => ({
+      this.activities = res.data.map((item) => ({
         content: item.context,
         timestamp: item.time
       }))
-    }
+    },
+    handleChange () {
 
+    }
   }
 }
 </script>
@@ -117,5 +166,4 @@ export default {
 .el-table {
   margin-bottom: 20px;
 }
-
 </style>

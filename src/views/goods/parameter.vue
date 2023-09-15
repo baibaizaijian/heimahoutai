@@ -28,6 +28,7 @@
     </tree-table>
     <div class="block">
       <el-pagination
+        ref="pagination"
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -216,6 +217,12 @@ export default {
         type: 'warning'
       }).then(async () => {
         const res = await delGoodsList(id)
+        if (this.reports.pagenum === this.$refs.pagination.internalPageCount &&
+          this.total % this.reports.pagesize === 1
+        ) {
+          this.reports.pagenum && this.reports.pagenum--
+          console.log('我要返回上一页')
+        }
         console.log(res)
         this.$message.success(res.meta.msg)
         this.getData()

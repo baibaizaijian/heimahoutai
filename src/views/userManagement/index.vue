@@ -1,8 +1,8 @@
 <template>
   <el-card class="box-card">
     <div class="header">
-      <el-input placeholder="请输入内容" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search"></el-button>
+      <el-input placeholder="请输入内容" class="input-with-select" v-model="datalist.query">
+        <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
       </el-input>
       <el-button type="primary" @click="dialogFormVisible = true">添加用户</el-button>
       <!-- 添加用户弹出框 -->
@@ -257,6 +257,7 @@ export default {
       const res = await getUsers(this.datalist)
       this.tableData = res.data.users
       this.total = res.data.total
+      this.datalist.query = ''
       console.log(res)
     },
     handleSizeChange (e) {
@@ -289,7 +290,7 @@ export default {
           if (this.datalist.pagenum === this.$refs.pagination.internalPageCount &&
           this.total % this.datalist.pagesize === 1
           ) {
-            this.datalist.pagenum--
+            this.datalist.pagenum && this.datalist.pagenum--
             console.log('我要返回上一页')
           }
           // console.log('这是当前页', this.datalist.pagenum)
@@ -323,8 +324,8 @@ export default {
       this.editDialogVisible = false
     },
     saveRoleInfo () {
-
     }
+
   }
 }
 </script>

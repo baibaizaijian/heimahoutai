@@ -1,7 +1,7 @@
 <template>
   <el-card class="box">
-    <el-input placeholder="请输入内容" class="input-with-select">
-      <el-button slot="append" icon="el-icon-search"></el-button>
+    <el-input placeholder="请输入内容" class="input-with-select" v-model="variate">
+      <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
     </el-input>
     <el-table :data="list" border style="width: 100%">
       <el-table-column prop="d" label="" width="50"> </el-table-column>
@@ -131,6 +131,7 @@ export default {
       this.list = res.data.goods
       this.total = res.data.total
       console.log(res.data.goods)
+      this.variate.query = ''
     },
     handleSizeChange (e) {
       this.variate.pagesize = e

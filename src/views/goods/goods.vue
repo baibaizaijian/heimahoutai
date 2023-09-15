@@ -1,8 +1,8 @@
 <template>
   <el-card>
     <div class="header">
-      <el-input placeholder="请输入内容" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search"></el-button>
+      <el-input placeholder="请输入内容" class="input-with-select" v-model="reports.query">
+        <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
       </el-input>
       <el-button type="primary" @click="$router.push('/goods/add')"
         >添加商品</el-button
@@ -50,6 +50,7 @@
     </el-table>
     <div class="block">
       <el-pagination
+        ref="pagination"
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -87,6 +88,7 @@ export default {
       const res = await getGoods(this.reports)
       this.tableData = res.data.goods
       this.total = res.data.total
+      this.reports.query = ''
     },
     handleSizeChange (e) {
       this.reports.pagesize = e
@@ -98,6 +100,12 @@ export default {
     },
     async del (id) {
       const res = await delGoods(id)
+      if (this.reports.pagenum === this.$refs.pagination.internalPageCount &&
+          this.total % this.reports.pagesize === 1
+      ) {
+        this.reports.pagenum && this.reports.pagenum--
+        console.log('我要返回上一页')
+      }
       this.$message.success(res.meta.msg)
       this.getData()
     },

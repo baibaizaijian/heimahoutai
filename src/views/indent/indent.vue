@@ -1,6 +1,6 @@
 <template>
   <el-card class="box">
-    <el-input placeholder="请输入内容" class="input-with-select" v-model="variate">
+    <el-input placeholder="请输入内容" class="input-with-select" v-model="variate.query">
       <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
     </el-input>
     <el-table :data="list" border style="width: 100%">
@@ -128,9 +128,10 @@ export default {
   methods: {
     async getData () {
       const res = await orders(this.variate)
+      console.log(res.data.goods)
+
       this.list = res.data.goods
       this.total = res.data.total
-      console.log(res.data.goods)
       this.variate.query = ''
     },
     handleSizeChange (e) {

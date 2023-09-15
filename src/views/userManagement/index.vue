@@ -128,7 +128,7 @@
               type="danger"
               size="mini"
               icon="el-icon-delete"
-              @click="open(obj.row.id)"
+              @click="del(obj.row.id)"
             ></el-button>
           </el-tooltip>
           <el-tooltip
@@ -149,6 +149,7 @@
     </el-table>
     <div class="block">
       <el-pagination
+        ref="pagination"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="datalist.pagenum"
@@ -275,7 +276,7 @@ export default {
       this.$refs.addForm.resetFields()
       // 刷新页面
     },
-    open (id) {
+    del (id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -284,18 +285,22 @@ export default {
         .then(async () => {
           const res = await delUsers(id)
           console.log(res)
-          this.getData()
           // 发送请求 刷新页面
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          if (this.datalist.pagenum === this.$refs.pagination.internalPageCount &&
+          this.total % this.datalist.pagesize === 1
+          ) {
+            this.datalist.pagenum--
+            console.log('我要返回上一页')
+          }
+          // console.log('这是当前页', this.datalist.pagenum)
+          // console.log('这是全部页', this.$refs.pagination)
+          // console.log('这是全部数量', this.total)
+          this.getData()
+
+          this.$message.success('删除成功')
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          this.$message.info('已取消删除')
         })
     },
     async put (id, bool) {

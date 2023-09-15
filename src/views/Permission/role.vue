@@ -8,7 +8,7 @@
           <!-- 一级 -->
           <el-row v-for="one in row.children" :key="one.id">
             <el-col :span="4">
-              <el-tag closable  @close="delRights(row.id,one.id)">
+              <el-tag closable  @close="delRights(row,one.id)">
                 {{ one.authName }}
               </el-tag>
               <i class="el-icon-caret-right"></i>
@@ -17,14 +17,14 @@
               <!-- 二级 -->
               <el-row v-for="two in one.children" :key="two.id">
                 <el-col :span="5">
-                  <el-tag type="success" closable  @close="delRights(row.id,two.id)">
+                  <el-tag type="success" closable  @close="delRights(row,two.id)">
                     {{ two.authName }}
                   </el-tag>
                   <i class="el-icon-caret-right"></i>
                 </el-col>
                 <el-col :span="19">
                   <el-tag
-                    @close="delRights(row.id,three.id)"
+                    @close="delRights(row,three.id)"
                     v-for="three in two.children"
                     :key="three.id"
                     type="warning"
@@ -262,9 +262,9 @@ export default {
 
       console.log(this.defKeys)
     },
-    delRights (roleId, perId) {
-      const res = delRoleRights(roleId, perId)
-      console.log(res)
+    async delRights (row, perId) {
+      const res = await delRoleRights(row.id, perId)
+      row.children = res.data
     }
   }
 }

@@ -74,7 +74,7 @@
             <el-upload
               class="upload-demo"
 
-              action="http://127.0.0.1:8888/api/private/v1/upload"
+              action="http://vue-shop-api-t.itheima.net/api/private/v1/upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :headers="headers"

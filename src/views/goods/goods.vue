@@ -5,7 +5,7 @@
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-button type="primary" @click="$router.push('/goods/add')"
-        >添加用户</el-button
+        >添加商品</el-button
       >
     </div>
     <el-table :data="tableData" border style="width: 100%">
@@ -29,7 +29,7 @@
               type="primary"
               size="mini"
               icon="el-icon-edit"
-              @click="editUser(obj.row.id)"
+              @click="put(obj.row.id)"
             ></el-button>
           </el-tooltip>
           <el-tooltip
@@ -42,7 +42,7 @@
               type="danger"
               size="mini"
               icon="el-icon-delete"
-              @click="open(obj.row.id)"
+              @click="del(obj.row.goods_id)"
             ></el-button>
           </el-tooltip>
         </template>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { getGoods } from '@/api/goods'
+import { getGoods, delGoods } from '@/api/goods'
 export default {
   name: 'goodsList',
   data () {
@@ -95,7 +95,16 @@ export default {
     handleCurrentChange (e) {
       this.reports.pagenum = e
       this.getData()
+    },
+    async del (id) {
+      const res = await delGoods(id)
+      this.$message.success(res.meta.msg)
+      this.getData()
+    },
+    put () {
+
     }
+
   }
 }
 </script>

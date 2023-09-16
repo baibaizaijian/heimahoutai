@@ -25,7 +25,8 @@ const routes = [
       { path: '/Welcome', component: () => import('@/views/Welcome') }
 
     ]
-  }
+  },
+  { path: '*', component: () => import('@/views/notFound') }
 ]
 
 const router = new VueRouter({
